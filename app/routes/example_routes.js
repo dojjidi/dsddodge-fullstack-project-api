@@ -10,7 +10,7 @@ const Example = require('../models/example')
 // to throw a custom error
 const customErrors = require('../../lib/custom_errors')
 
-// we'll use this function to send 404 when non-existant document is requested
+// we'll use this function to send 404 when non-existent document is requested
 const handle404 = customErrors.handle404
 // we'll use this function to send 401 when a user tries to modify a resource
 // that's owned by someone else
@@ -29,7 +29,7 @@ const router = express.Router()
 
 // INDEX
 // GET /examples
-router.get('/examples', requireToken, (req, res, next) => {
+router.get('/scores', requireToken, (req, res, next) => {
   Example.find()
     // respond with status 200 and JSON of the examples
     .then(examples => res.status(200).json({ examples: examples }))
@@ -39,11 +39,11 @@ router.get('/examples', requireToken, (req, res, next) => {
 
 // SHOW
 // GET /examples/5a7db6c74d55bc51bdf39793
-router.get('/examples/:id', requireToken, (req, res, next) => {
+router.get('/scores/:id', requireToken, (req, res, next) => {
   // req.params.id will be set based on the `:id` in the route
   Example.findById(req.params.id)
     .then(handle404)
-    // if `findById` is succesful, respond with 200 and "example" JSON
+    // if `findById` is successful, respond with 200 and "example" JSON
     .then(example => res.status(200).json({ example: example }))
     // if an error occurs, pass it to the handler
     .catch(next)
@@ -51,7 +51,7 @@ router.get('/examples/:id', requireToken, (req, res, next) => {
 
 // CREATE
 // POST /examples
-router.post('/examples', requireToken, (req, res, next) => {
+router.post('/scores', requireToken, (req, res, next) => {
   // set owner of new example to be current user
   req.body.example.owner = req.user.id
 
@@ -68,7 +68,7 @@ router.post('/examples', requireToken, (req, res, next) => {
 
 // UPDATE
 // PATCH /examples/5a7db6c74d55bc51bdf39793
-router.patch('/examples/:id', requireToken, removeBlanks, (req, res, next) => {
+router.patch('/scores/:id', requireToken, removeBlanks, (req, res, next) => {
   // if the client attempts to change the `owner` property by including a new
   // owner, prevent that by deleting that key/value pair
   delete req.body.example.owner
@@ -87,10 +87,10 @@ router.patch('/examples/:id', requireToken, removeBlanks, (req, res, next) => {
 
 // DESTROY
 // DELETE /examples/5a7db6c74d55bc51bdf39793
-router.delete('/examples/:id', requireToken, (req, res, next) => {
+router.delete('/scores/:id', requireToken, (req, res, next) => {
   Example.findById(req.params.id)
     .then(handle404)
-     // ensure the signed in user (req.user.id) is the same as the example's owner (example.owner)
+  // ensure the signed in user (req.user.id) is the same as the example's owner (example.owner)
     .then(example => requireOwnership(req, example))
     // delete example from mongodb
     .then(example => example.deleteOne())
