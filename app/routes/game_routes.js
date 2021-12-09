@@ -55,7 +55,7 @@ router.post('/games', requireToken, (req, res, next) => {
   // set owner of new example to be current user
   req.body.game.owner = req.user.id
 
-  Game.create(req.body.example)
+  Game.create(req.body.game)
     // respond to succesful `create` with status 201 and JSON of new "example"
     .then(game => {
       res.status(201).json({ game })
